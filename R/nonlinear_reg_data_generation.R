@@ -47,3 +47,8 @@ for(i in 1:n_obs){
 plot(true_x[,1], y, type="l", col="red", lwd=4,
      main = "True Underlying MEGA-Nonlinear Function", xlab = "x value")
 
+regression_data <- data.frame(cbind(y, x_vec))
+regression_data <- data.frame(lapply(regression_data, as.character),
+                              stringsAsFactors=FALSE)
+write.csv(regression_data, "data/regression_data.csv", row.names = FALSE)
+regression_data

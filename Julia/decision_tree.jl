@@ -5,7 +5,7 @@ using DecisionTree: fit!
 data = CSV.read("C:/Users/Hyrum Hansen/Documents/github/model-benchmarking/data/classification_data.csv", DataFrame)
 
 features = Matrix(select(data, Not([:Column1, :y])))
-labels = data[!, :y]
+labels = Matrix(data[!, :y])
 
 # Initialize an empty vector to store the fit times
 fit_times = Float64[]
