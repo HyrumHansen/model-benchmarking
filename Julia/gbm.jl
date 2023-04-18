@@ -1,11 +1,17 @@
-using DecisionTree, CSV, DataFrames, MLBase
-using DecisionTree: fit!
+using EvoTrees, CSV, DataFrames, CategoricalArrays, Statistics
+using EvoTrees: importance
 
-# Load data from CSV file
-data = CSV.read("C:/Users/Hyrum Hansen/Documents/github/model-benchmarking/data/classification_data.csv", DataFrame)
+# Load data
+data = DataFrame(CSV.read("C:/Users/Hyrum Hansen/Documents/github/model-benchmarking/data/classification_data.csv", DataFrame))
+data[!, :y] = data[!, :y]
 
-features = Matrix(select(data, Not([:Column1, :y])))
-labels = data[!, :y]
+y_train, x_train = data[!, :y], Matrix(select(data, Not([:Column1, :y])))
+
+params = EvoTreeRegressor(
+    loss=:linear, metric=:mse,
+    nrounds=100, eta=0.1,
+    max_depth = 3, min_weight = 1.0,
+    rowsample=0.8, colsample=0.8)
 
 # Initialize an empty vector to store the fit times
 fit_times = Float64[]
@@ -14,8 +20,7 @@ fit_times = Float64[]
 for i in 1:500
 
     t0 = time()
-    model = DecisionTreeClassifier(max_depth=2)
-    fit!(model, features, labels) 
+    model = fit_evotree(params; x_train, y_train)
     t1 = time()
 
     fit_time = t1 - t0
